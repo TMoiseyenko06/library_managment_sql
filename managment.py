@@ -5,6 +5,7 @@ conn = connect()
 if conn is not None:
     cursor = conn.cursor()
 
+#adds a book
 def add_book(book_name,author_id):
     try:
         cursor.execute('INSERT INTO books (name,author_id,borrowed) VALUES (%s,%s,%s)',(book_name,author_id,0))
@@ -14,10 +15,12 @@ def add_book(book_name,author_id):
     else:
         print('Book Succsesfully Added')
 
+#add author
 def add_author(author_name,biography):
     cursor.execute('INSERT INTO authors (name,biography) VALUES (%s,%s)',(author_name,biography))
     conn.commit()
 
+#borrows a book
 def borrow_book(book_id,user_id):
     try:
         cursor.execute('SELECT * FROM books WHERE id = %s and borrowed = 0',(book_id,))
@@ -31,6 +34,7 @@ def borrow_book(book_id,user_id):
     except Error as e:
         print(f'A database error has occuered: {e}')
 
+#retun a book but only if it is out
 def return_book(book_id,user_id):
     try:
         cursor.execute('SELECT * FROM current_transactions WHERE user_id = %s AND book_id = %s',(user_id,book_id))
@@ -43,22 +47,27 @@ def return_book(book_id,user_id):
     except Error as e:
         print(f'A database error occured: {e} please try again.')
 
+#add a user
 def add_user(user_name):
     cursor.execute('INSERT INTO users (name) VALUES (%s)',(user_name,))
     conn.commit()
 
+#get user name
 def get_user_name(user_id):
     cursor.execute('SELECT name FROM users WHERE id = %s',(user_id,))
     return cursor.fetchone()[0]
 
+#get book name
 def get_book_name(book_id):
     cursor.execute('SELECT name FROM books WHERE id = %s',(book_id,))
     return cursor.fetchone()[0]
 
+#get author name
 def get_author_name(author_id):
     cursor.execute('SELECT name FROM authors WHERE id = %s',(author_id,))
     return cursor.fetchone()[0]
 
+#search for book
 def search_for_book(book_id):
     try:
         cursor.execute('SELECT * FROM books WHERE id = %s',(book_id,))
@@ -72,6 +81,7 @@ def search_for_book(book_id):
     except Error as e:
         print(f'A database error occured: {e} please try again.')
 
+#display all books
 def display_all_books():
     cursor.execute('SELECT * FROM books')
     results = cursor.fetchall()
@@ -82,6 +92,7 @@ def display_all_books():
         book_borrowed = True if result[3] == 1 else False
         print(f'Book with id of {book_id}:\nName: {book_name}\nAuthor: {book_author}\nThis book is {'currently out' if book_borrowed else 'currently avalible'}')
 
+#view user
 def view_user(user_id):
     cursor.execute('SELECT name FROM users WHERE id = %s',(user_id,))
     result = cursor.fetchone()
@@ -95,17 +106,20 @@ def view_user(user_id):
         for book in books:
             print(f'\n{get_book_name(book[0])}')
 
+#display all users
 def display_all_users():
     cursor.execute('SELECT * FROM users')
     users = cursor.fetchall()
     for user in users:
         view_user(user[0])
 
+#view author
 def view_author(author_id):
     cursor.execute('SELECT * FROM authors WHERE id = %s',(author_id,))
     author = cursor.fetchone()
     print(f'Author: {author[1]}, Biography: {author[2]}')
 
+#view all authors
 def display_all_authors():
     cursor.execute('SELECT * FROM authors')
     authors = cursor.fetchall()

@@ -1,12 +1,12 @@
 import managment as manage
 import user_interface as UI
 
-
+#Main class that runs the library
 class Library(UI.UserInterface):
     def __init__(self, admin):
         self.__admin = admin
         self.__library = UI.UserInterface()
-
+    #runs library and takes all of the options from the user
     def run_library(self):
         print(f"Welcome {self.__admin}")
         while True:
@@ -78,6 +78,6 @@ class Library(UI.UserInterface):
             else:
                 break
 
-
+#activates the library
 main = Library("Coding Temple")
 main.run_library()

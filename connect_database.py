@@ -1,6 +1,7 @@
 import mysql.connector as connector
 from mysql.connector import Error
 
+#connects to the library database if it exists
 def connect():
     try:
         conn = connector.connect(
